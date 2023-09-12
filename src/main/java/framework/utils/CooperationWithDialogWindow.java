@@ -18,18 +18,19 @@ public class CooperationWithDialogWindow {
     private CooperationWithDialogWindow() {
     }
 
-    public static void openFileFromDialogWindow(String path, String fileName) {
-        SmartLogger.logInfo("Selecting a file to upload");
+    public static void openFileFromDialogWindow(String filePath) {
+        SmartLogger.logInfo("Select a file to load");
         try {
-            Thread.sleep(SLEEP_TIME);
             Robot robot = new Robot();
-            StringSelection stringSelection = new StringSelection(path.concat(fileName));
+            StringSelection stringSelection = new StringSelection(System.getProperty("user.dir").concat(filePath));
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+
+            Thread.sleep(SLEEP_TIME);
 
             robot.keyPress(KeyEvent.VK_CONTROL);
             robot.keyPress(KeyEvent.VK_V);
-            robot.keyRelease(KeyEvent.VK_CONTROL);
             robot.keyRelease(KeyEvent.VK_V);
+            robot.keyRelease(KeyEvent.VK_CONTROL);
             robot.keyPress(KeyEvent.VK_ENTER);
             robot.keyRelease(KeyEvent.VK_ENTER);
 

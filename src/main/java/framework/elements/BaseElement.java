@@ -2,11 +2,13 @@ package framework.elements;
 
 import framework.browser.Browser;
 import framework.utils.WaiterUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import framework.utils.SmartLogger;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,14 @@ public abstract class BaseElement {
     protected BaseElement(By locator, String elementName) {
         this.locator = locator;
         this.elementName = elementName;
+    }
+
+    public Dimension getSize() {
+        return this.findElement().getSize();
+    }
+
+    public Point getLocation() {
+        return this.findElement().getLocation();
     }
 
     public void click() {
@@ -58,6 +68,14 @@ public abstract class BaseElement {
 
     public int sizeList() {
         return this.findElements().size();
+    }
+
+    public void loadFile(String filePath) {
+        this.findElement().sendKeys(filePath);
+    }
+
+    public String getAttribute(String attribute) {
+        return this.findElement().getAttribute(attribute);
     }
 
     public String getText() {
@@ -119,5 +137,18 @@ public abstract class BaseElement {
         }
 
         return childElements;
+    }
+
+    public File captureElementBitmap(String format) {
+        try {
+            File screen = Browser.takeScreenshot();
+            BufferedImage img = ImageIO.read(screen);
+            Rectangle rect = new Rectangle(this.getLocation(), this.getSize());
+            BufferedImage dest = img.getSubimage(this.getLocation().getX(), this.getLocation().getY(), rect.width, rect.height);
+            ImageIO.write(dest, format, screen);
+            return screen;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

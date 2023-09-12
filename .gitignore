@@ -5,3 +5,5 @@ logs/
 # Maven
 log/
 target/
+# TestResult
+newDataset/*
